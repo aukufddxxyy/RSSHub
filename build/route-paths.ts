@@ -173,6 +173,7 @@ export type RoutePath =
   | `/alternativeto/platform/:name/:routeParams?`
   | `/alternativeto/software/:name/:routeParams?`
   | `/altotrain/:language?`
+  | `/alwayscontrol/news`
   | `/amazfitwatchfaces/:device/:sort/:searchParams?`
   | `/amazon/awsblogs/:locale?`
   | `/amazon/kindle/software-updates`
@@ -185,6 +186,7 @@ export type RoutePath =
   | `/anquanke/:category/:fulltext?`
   | `/anthropic/engineering`
   | `/anthropic/news`
+  | `/anthropic/red`
   | `/anthropic/research`
   | `/anytxt/release-notes`
   | `/apache/apisix/blog`
@@ -1415,7 +1417,6 @@ export type RoutePath =
   | `/hust/yjs`
   | `/huxiu/article`
   | `/huxiu/author/:id/:type?`
-  | `/huxiu/briefcolumn/:id`
   | `/huxiu/channel/:id?`
   | `/huxiu/club/:id`
   | `/huxiu/collection/:id`
@@ -1474,7 +1475,6 @@ export type RoutePath =
   | `/infoq/presentations/:conference?`
   | `/infoq/recommend`
   | `/infoq/topic/:id`
-  | `/informedainews/zh-Hans/docs/:type`
   | `/informs/:category?`
   | `/infzm/:id`
   | `/infzm/hot`
@@ -1779,6 +1779,7 @@ export type RoutePath =
   | `/matters/author/:uid`
   | `/matters/latest/:type?`
   | `/matters/tags/:tid`
+  | `/maven/central/:group/:artifact`
   | `/mckinsey/cn/:category?`
   | `/mcmod/:type`
   | `/mdpi/:journal`
@@ -2045,6 +2046,7 @@ export type RoutePath =
   | `/nyaa/sukebei/user/:username?`
   | `/nyaa/user/:username/search/:query?`
   | `/nyaa/user/:username?`
+  | `/nyc/mayors-office-news/:types?/:categories?`
   | `/nycu/aa/:id?`
   | `/nycu/announcement/:type`
   | `/nycu/cs/:category?`

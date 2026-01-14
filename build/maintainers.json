@@ -107,7 +107,9 @@
   "/18comic/:category?/:time?/:order?/:keyword?": [
     "nczitzk"
   ],
-  "/18comic/search/:option?/:category?/:keyword?/:time?/:order?": [],
+  "/18comic/search/:option?/:category?/:keyword?/:time?/:order?": [
+    "nczitzk"
+  ],
   "/199it/:category{.+}?": [
     "nczitzk"
   ],
@@ -516,6 +518,9 @@
   "/altotrain/:language?": [
     "elibroftw"
   ],
+  "/alwayscontrol/news": [
+    "moss-xxh"
+  ],
   "/amazfitwatchfaces/:device/:sort/:searchParams?": [
     "nczitzk"
   ],
@@ -552,6 +557,9 @@
   "/anthropic/news": [
     "etShaw-zh",
     "goestav"
+  ],
+  "/anthropic/red": [
+    "shoeper"
   ],
   "/anthropic/research": [
     "ttttmr"
@@ -3249,7 +3257,9 @@
     "gz4zzxc"
   ],
   "/gdut/oa_news/:type?": [
-    "jim-kirisame"
+    "jim-kirisame",
+    "GamerNoTitle",
+    "Richard-Zheng"
   ],
   "/geekpark/:column?": [
     "nczitzk"
@@ -4305,20 +4315,19 @@
   "/hust/yjs": [
     "shengmaosu"
   ],
-  "/huxiu/briefcolumn/:id": [
-    "Fatpandac",
-    "nczitzk"
-  ],
   "/huxiu/article": [
     "HenryQW",
-    "nczitzk"
+    "nczitzk",
+    "TimoYoung"
   ],
   "/huxiu/channel/:id?": [
     "HenryQW",
-    "nczitzk"
+    "nczitzk",
+    "TimoYoung"
   ],
   "/huxiu/club/:id": [
-    "nczitzk"
+    "nczitzk",
+    "TimoYoung"
   ],
   "/huxiu/collection/:id": [
     "AlexdanerZe",
@@ -4341,7 +4350,8 @@
   "/huxiu/tag/:id": [
     "xyqfer",
     "HenryQW",
-    "nczitzk"
+    "nczitzk",
+    "TimoYoung"
   ],
   "/hyperdash/top-traders": [
     "pseudoyu"
@@ -4496,9 +4506,6 @@
   ],
   "/infoq/topic/:id": [
     "brilon"
-  ],
-  "/informedainews/zh-Hans/docs/:type": [
-    "guicaiyue"
   ],
   "/informs/:category?": [
     "Fatpandac"
@@ -5407,6 +5414,9 @@
   "/matters/tags/:tid": [
     "Cerebrater"
   ],
+  "/maven/central/:group/:artifact": [
+    "chrisis58"
+  ],
   "/mckinsey/cn/:category?": [
     "laampui"
   ],
@@ -6240,6 +6250,9 @@
     "Lava-Swimmer",
     "noname1776",
     "camera-2018"
+  ],
+  "/nyc/mayors-office-news/:types?/:categories?": [
+    "hkamran80"
   ],
   "/nycu/aa/:id?": [
     "simbafs"
