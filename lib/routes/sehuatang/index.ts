@@ -36,7 +36,7 @@ const forumIdMaps: Record<string, string> = {
 };
 
 export const route: Route = {
-    path: ['/:subforumid?/:type?', ''],
+    path: ['/bt/:subforumid?', '/picture/:subforumid', '/:subforumid?/:type?', '/:subforumid?', ''],
     name: 'Forum',
     example: '/sehuatang/gqzwzm',
     maintainers: ['qiwihui', 'junfengP', 'nczitzk'],
