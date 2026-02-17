@@ -39,7 +39,11 @@ async function handler(ctx) {
     const uid = ctx.req.param('uid');
     const link = `${baseUrl}/home.php?mod=space&uid=${uid}&do=thread&view=me&from=space`;
     const cookie = config.sehuatang.cookie;
-    const headers: Record<string, string> = { Cookie: cookie };
+    const headers: Record<string, string> = {
+        Cookie: cookie,
+        'User-Agent': config.trueUA,
+        Referer: `${baseUrl}/`,
+    };
 
     const response = await ofetch(link, { headers });
     const $ = load(response);

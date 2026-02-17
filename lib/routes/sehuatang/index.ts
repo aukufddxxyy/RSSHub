@@ -89,7 +89,10 @@ const getSafeId = () =>
 
 async function handler(ctx) {
     const cookie = config.sehuatang.cookie;
-    const headers: Record<string, string> = {};
+    const headers: Record<string, string> = {
+        'User-Agent': config.trueUA,
+        Referer: `${baseUrl}/`,
+    };
 
     if (cookie) {
         headers.Cookie = cookie;
