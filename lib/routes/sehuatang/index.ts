@@ -1,11 +1,13 @@
 import { load } from 'cheerio';
 
+import { config } from '@/config';
 import type { DataItem, Route } from '@/types';
 import cache from '@/utils/cache';
+import ofetch from '@/utils/ofetch';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
-import { baseUrl, fetchPage } from './utils';
+const baseUrl = 'https://www.sehuatang.net';
 
 const forumIdMaps: Record<string, string> = {
     gcyc: '2',
@@ -41,7 +43,14 @@ export const route: Route = {
     handler,
     categories: ['multimedia'],
     features: {
-        requirePuppeteer: true,
+        requireConfig: [
+            {
+                name: 'SEHUATANG_COOKIE',
+                optional: true,
+                description: 'Cookie from browser, required when Cloudflare is active',
+            },
+        ],
+        requirePuppeteer: false,
         antiCrawler: true,
         nsfw: true,
     },
@@ -62,14 +71,42 @@ export const route: Route = {
 | yczp     | ztzp     | hrjp     | yzxa     | omxa     | ktdm     | ttxz     |`,
 };
 
+const getSafeId = () =>
+    cache.tryGet(
+        'sehuatang:safeid',
+        async () => {
+            const response = await ofetch(baseUrl);
+            const $ = load(response);
+            return (
+                $('script:contains("safeid")')
+                    .text()
+                    .match(/safeid\s*=\s*'(.+)';/)?.[1] ?? ''
+            );
+        },
+        config.cache.routeExpire,
+        false
+    );
+
 async function handler(ctx) {
+    const cookie = config.sehuatang.cookie;
+    const headers: Record<string, string> = {};
+
+    if (cookie) {
+        headers.Cookie = cookie;
+    } else {
+        const safeId = await getSafeId();
+        if (safeId) {
+            headers.Cookie = `_safe=${safeId};`;
+        }
+    }
+
     const subformName = ctx.req.param('subforumid') ?? 'gqzwzm';
     const subformId = subformName in forumIdMaps ? forumIdMaps[subformName] : subformName;
     const type = ctx.req.param('type');
     const typefilter = type ? `&filter=typeid&typeid=${type}` : '';
     const link = `${baseUrl}/forum.php?mod=forumdisplay&orderby=dateline&fid=${subformId}${typefilter}`;
 
-    const response = await fetchPage(link);
+    const response = await ofetch(link, { headers });
     const $ = load(response);
 
     const list = $('#threadlisttableid tbody[id^=normalthread]')
@@ -89,7 +126,7 @@ async function handler(ctx) {
     const out: DataItem[] = await Promise.all(
         list.map((info) =>
             cache.tryGet(info.link, async () => {
-                const response = await fetchPage(info.link);
+                const response = await ofetch(info.link, { headers });
                 const $ = load(response);
 
                 const postMessage = $('div[id^="postmessage"], td[id^="postmessage"]').slice(0, 1);
