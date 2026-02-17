@@ -129,52 +129,58 @@ async function handler(ctx) {
     const out: DataItem[] = await Promise.all(
         list.map((info) =>
             cache.tryGet(info.link, async () => {
-                const response = await ofetch(info.link, { headers });
-                const $ = load(response);
+                try {
+                    const response = await ofetch(info.link, { headers });
+                    const $ = load(response);
 
-                const postMessage = $('div[id^="postmessage"], td[id^="postmessage"]').slice(0, 1);
-                const images = $(postMessage).find('img');
-                for (const image of images) {
-                    const file = $(image).attr('file');
-                    if (!file || file === 'undefined') {
-                        $(image).replaceWith('');
-                    } else {
-                        $(image).replaceWith($(`<img src="${file}">`));
+                    const postMessage = $('div[id^="postmessage"], td[id^="postmessage"]').slice(0, 1);
+                    const images = $(postMessage).find('img');
+                    for (const image of images) {
+                        const file = $(image).attr('file');
+                        if (!file || file === 'undefined') {
+                            $(image).replaceWith('');
+                        } else {
+                            $(image).replaceWith($(`<img src="${file}">`));
+                        }
                     }
-                }
 
-                const pattl = $('.pattl');
-                const pattlImages = $(pattl).find('img');
-                for (const pattlImage of pattlImages) {
-                    const file = $(pattlImage).attr('file');
-                    if (!file || file === 'undefined') {
-                        $(pattlImage).replaceWith('');
-                    } else {
-                        $(pattlImage).replaceWith($(`<img src="${file}" />`));
+                    const pattl = $('.pattl');
+                    const pattlImages = $(pattl).find('img');
+                    for (const pattlImage of pattlImages) {
+                        const file = $(pattlImage).attr('file');
+                        if (!file || file === 'undefined') {
+                            $(pattlImage).replaceWith('');
+                        } else {
+                            $(pattlImage).replaceWith($(`<img src="${file}" />`));
+                        }
                     }
+                    postMessage.append($(pattl));
+                    $('em[onclick]').remove();
+
+                    const description = (postMessage.html() || '抓取原帖失败').replaceAll('ignore_js_op', 'div');
+                    const pubDate = timezone(parseDate($('.authi em span').attr('title') ?? ''), 8);
+
+                    const magnet = postMessage.find('div.blockcode li').first().text();
+                    const isMag = magnet.startsWith('magnet');
+                    const torrent = postMessage.find('p.attnm a').attr('href');
+                    const hasEnclosureUrl = isMag || torrent !== undefined;
+
+                    return {
+                        ...info,
+                        description,
+                        pubDate,
+                        ...(hasEnclosureUrl
+                            ? {
+                                  enclosure_url: isMag ? magnet : new URL(torrent!, baseUrl).href,
+                                  enclosure_type: isMag ? 'application/x-bittorrent' : 'application/octet-stream',
+                              }
+                            : {}),
+                    } as DataItem;
+                } catch {
+                    // Detail page may return 403 due to Cloudflare challenge,
+                    // fall back to list-level info without full description
+                    return info as DataItem;
                 }
-                postMessage.append($(pattl));
-                $('em[onclick]').remove();
-
-                const description = (postMessage.html() || '抓取原帖失败').replaceAll('ignore_js_op', 'div');
-                const pubDate = timezone(parseDate($('.authi em span').attr('title') ?? ''), 8);
-
-                const magnet = postMessage.find('div.blockcode li').first().text();
-                const isMag = magnet.startsWith('magnet');
-                const torrent = postMessage.find('p.attnm a').attr('href');
-                const hasEnclosureUrl = isMag || torrent !== undefined;
-
-                return {
-                    ...info,
-                    description,
-                    pubDate,
-                    ...(hasEnclosureUrl
-                        ? {
-                              enclosure_url: isMag ? magnet : new URL(torrent!, baseUrl).href,
-                              enclosure_type: isMag ? 'application/x-bittorrent' : 'application/octet-stream',
-                          }
-                        : {}),
-                } as DataItem;
             })
         )
     );
