@@ -4,10 +4,9 @@ import { config } from '@/config';
 import ConfigNotFoundError from '@/errors/types/config-not-found';
 import type { DataItem, Route } from '@/types';
 import cache from '@/utils/cache';
-import ofetch from '@/utils/ofetch';
 import { parseDate } from '@/utils/parse-date';
 
-const baseUrl = 'https://www.sehuatang.net';
+import { baseUrl, fetchPage } from './utils';
 
 export const route: Route = {
     path: '/user/:uid',
@@ -38,14 +37,8 @@ async function handler(ctx) {
 
     const uid = ctx.req.param('uid');
     const link = `${baseUrl}/home.php?mod=space&uid=${uid}&do=thread&view=me&from=space`;
-    const cookie = config.sehuatang.cookie;
-    const headers: Record<string, string> = {
-        Cookie: cookie,
-        'User-Agent': config.trueUA,
-        Referer: `${baseUrl}/`,
-    };
 
-    const response = await ofetch(link, { headers });
+    const response = await fetchPage(link);
     const $ = load(response);
 
     const list = $('#delform tr:not(.th)')
@@ -66,7 +59,7 @@ async function handler(ctx) {
         list.map((info) =>
             cache.tryGet(info.link, async () => {
                 try {
-                    const response = await ofetch(info.link, { headers });
+                    const response = await fetchPage(info.link);
                     const $ = load(response);
 
                     const postMessage = $("[id^='postmessage']").slice(0, 1);
