@@ -5,7 +5,7 @@ import cache from '@/utils/cache';
 import { parseDate } from '@/utils/parse-date';
 import timezone from '@/utils/timezone';
 
-import { baseUrl, fetchPage } from './utils';
+import { baseUrl, fetchPage, toForumPhpUrl } from './utils';
 
 const forumIdMaps: Record<string, string> = {
     gcyc: '2',
@@ -97,7 +97,7 @@ async function handler(ctx) {
         list.map((info) =>
             cache.tryGet(info.link, async () => {
                 try {
-                    const response = await fetchPage(info.link);
+                    const response = await fetchPage(toForumPhpUrl(info.link));
                     const $ = load(response);
 
                     const postMessage = $('div[id^="postmessage"], td[id^="postmessage"]').slice(0, 1);

@@ -6,7 +6,7 @@ import type { DataItem, Route } from '@/types';
 import cache from '@/utils/cache';
 import { parseDate } from '@/utils/parse-date';
 
-import { baseUrl, fetchPage } from './utils';
+import { baseUrl, fetchPage, toForumPhpUrl } from './utils';
 
 export const route: Route = {
     path: '/user/:uid',
@@ -59,7 +59,7 @@ async function handler(ctx) {
         list.map((info) =>
             cache.tryGet(info.link, async () => {
                 try {
-                    const response = await fetchPage(info.link);
+                    const response = await fetchPage(toForumPhpUrl(info.link));
                     const $ = load(response);
 
                     const postMessage = $("[id^='postmessage']").slice(0, 1);

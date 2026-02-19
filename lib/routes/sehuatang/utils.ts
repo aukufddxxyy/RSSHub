@@ -3,6 +3,12 @@ import cache from '@/utils/cache';
 
 export const baseUrl = 'https://www.sehuatang.net';
 
+// Cloudflare blocks thread-XXX.html but allows forum.php — convert for server-side fetch
+export function toForumPhpUrl(url: string): string {
+    const match = url.match(/thread-(\d+)/);
+    return match ? `${baseUrl}/forum.php?mod=viewthread&tid=${match[1]}` : url;
+}
+
 function buildHeaders(cookie?: string): Record<string, string> {
     const headers: Record<string, string> = {
         'User-Agent': config.trueUA,
